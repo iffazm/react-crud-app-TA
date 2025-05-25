@@ -1,7 +1,7 @@
 import React from 'react';
 import Logout from '../Logout';
 
-const Header = ({ setIsAdding, setIsAuthenticated }) => {
+const Header = ({ setIsAdding, setIsAuthenticated, toggleDarkMode, isDarkMode, sortOrder, setSortOrder }) => {
   return (
     <header className="header">
       <div className="title">
@@ -9,6 +9,25 @@ const Header = ({ setIsAdding, setIsAuthenticated }) => {
       </div>
       <div className="actions">
         <button onClick={() => setIsAdding(true)}>Add Employee</button>
+
+        <button onClick={toggleDarkMode}>
+          {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+          </button>
+
+          {/* Sort Button */}
+          <button
+            onClick={() => setSortOrder('asc')}
+            disabled={sortOrder === 'asc'}
+          >
+            Sort A-Z
+          </button>
+          <button
+            onClick={() => setSortOrder('desc')}
+            disabled={sortOrder === 'desc'}
+            >
+              Sort Z-A
+            </button>
+
         <Logout setIsAuthenticated={setIsAuthenticated} />
       </div>
     </header>

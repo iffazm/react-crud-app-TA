@@ -9,17 +9,36 @@ import Edit from './Edit';
 import Footer from './Footer';
 
 import { employeesData } from '../../data';
+import { preconnect } from 'react-dom';
 
 const Dashboard = ({ setIsAuthenticated }) => {
   const [employees, setEmployees] = useState(employeesData);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [sortOrder, setSortOrder] = useState(null);
+
+  useEffect(() => {
+    document.body.classList.toggle('dark-mode', isDarkMode);
+  }, [isDarkMode]);
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem('employees_data'));
     if (data !== null && Object.keys(data).length !== 0) setEmployees(data);
   }, []);
+
+  useEffect(() => {
+    if (sortOrder === 'asc') {
+      setEmployees((prev) =>
+        [...prev].sort((a, b) => a.firstName.localeCompare(b.firstName))
+      );
+    } else if (sortOrder === 'desc') {
+      setEmployees((prev) =>
+        [...prev].sort((a, b) => b.firstName.localeCompare(a.firstName))
+      );
+    }
+  }, [sortOrder]);
 
   const handleEdit = (id) => {
     const [employee] = employees.filter((employee) => employee.id === id);
@@ -55,6 +74,8 @@ const Dashboard = ({ setIsAuthenticated }) => {
     });
   };
 
+  const toggleDarkMode = () => setIsDarkMode((prev) => !prev);
+
   return (
     <div className="container">
       {!isAdding && !isEditing && (
@@ -62,6 +83,10 @@ const Dashboard = ({ setIsAuthenticated }) => {
           <Header
             setIsAdding={setIsAdding}
             setIsAuthenticated={setIsAuthenticated}
+            toggleDarkMode={toggleDarkMode}
+            isDarkMode={isDarkMode}
+            sortOrder={sortOrder}
+            setSortOrder={setSortOrder}
           />
           <Table
             employees={employees}

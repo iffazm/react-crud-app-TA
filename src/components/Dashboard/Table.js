@@ -4,6 +4,7 @@ const Table = ({ employees, handleEdit, handleDelete }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('table'); // 'table' or 'card'
+  const [sortOrder, setSortOrder] = useState('asc');
   const pageSize = 8;
 
   const formatter = new Intl.NumberFormat('en-US', {
@@ -20,6 +21,12 @@ const Table = ({ employees, handleEdit, handleDelete }) => {
   const filteredEmployees = employees.filter((employee) =>
     `${employee.firstName} ${employee.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const sortedEmployees = [...filteredEmployees].sort((a, b) => {
+    const nameA = `${a.firstName} ${a.lastName}`.toLowerCase();
+    const nameB = `${b.firstName} ${b.lastName}`.toLowerCase();
+    return sortOrder === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+  });
 
   const visibleEmployees = filteredEmployees.slice(startIndex, endIndex);
 
@@ -46,6 +53,10 @@ const Table = ({ employees, handleEdit, handleDelete }) => {
     setViewMode(viewMode === 'table' ? 'card' : 'table');
   };
 
+  const toggleSortOrder = () => {
+    setSortOrder((prevOrder) => (prevOrder === 'asc' ? 'desc' : 'asc'));
+  };
+
   return (
     <div className="container">
       {/* Add a toggle button to switch between table and card view */}
@@ -55,13 +66,19 @@ const Table = ({ employees, handleEdit, handleDelete }) => {
         </button>
       </div>
 
-      <input
-        className="left-content"
-        type="text"
-        placeholder="Search by name"
-        value={searchQuery}
-        onChange={handleSearchChange}
+      <div className="left-content" style={{display: 'flex', gap: '1rem', marginBottom: '1rem'}}>
+        <input
+          type="text"
+          placeholder="Search by name"
+          value={searchQuery}
+          onChange={handleSearchChange}
       />
+
+      <button onClick={toggleSortOrder}>
+        Sort {sortOrder === 'asc' ? 'Z-A' : 'A-Z'}
+      </button>
+    </div>
+
 
       {viewMode === 'table' ? (
         <table className="striped-table">
