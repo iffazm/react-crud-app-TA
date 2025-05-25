@@ -9,7 +9,6 @@ import Edit from './Edit';
 import Footer from './Footer';
 
 import { employeesData } from '../../data';
-import { preconnect } from 'react-dom';
 
 const Dashboard = ({ setIsAuthenticated }) => {
   const [employees, setEmployees] = useState(employeesData);

@@ -28,7 +28,7 @@ const Table = ({ employees, handleEdit, handleDelete }) => {
     return sortOrder === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
   });
 
-  const visibleEmployees = filteredEmployees.slice(startIndex, endIndex);
+  const visibleEmployees = sortedEmployees.slice(startIndex, endIndex);
 
   const totalPages = Math.ceil(filteredEmployees.length / pageSize);
 
